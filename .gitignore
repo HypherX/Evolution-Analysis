@@ -1,0 +1,5 @@
+__pycache__/
+data/
+figs/
+results/
+gpt_request_new.py
