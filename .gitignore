@@ -3,3 +3,5 @@ data/
 figs/
 results/
 gpt_request_new.py
+run.sh
+Auto_Evol_Instruct/__pycache__/

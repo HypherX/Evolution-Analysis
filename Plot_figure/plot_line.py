@@ -24,20 +24,20 @@ def plot_single(ax, x, model1, Ours, group_labels, y_ticks, ylim, ylabel):
 
     # Set x-axis labels and ticks
     ax.set_xticks(x)
-    ax.set_xticklabels(group_labels, fontsize=14)
+    ax.set_xticklabels(group_labels, fontsize=16)
     
     # Set y-axis labels and ticks
     ax.set_yticks(y_ticks)
-    ax.set_yticklabels([str(tick) for tick in y_ticks], fontsize=14)
+    ax.set_yticklabels([str(tick) for tick in y_ticks], fontsize=16)
     
     # Set y-axis range
     ax.set_ylim(ylim)
     
     # Set y-axis label
-    ax.set_ylabel(ylabel, fontsize=16)
+    ax.set_ylabel(ylabel, fontsize=18)
     
     # Display legend
-    ax.legend(loc='upper left', numpoints=1, ncol=2, fontsize=14)
+    ax.legend(loc='upper left', numpoints=1, ncol=2, fontsize=16)
 
 # X-axis values (iterations)
 x = np.array([1, 2, 3, 4])
@@ -75,4 +75,4 @@ plt.tight_layout()
 plt.savefig(f'figs/iterations.pdf')
 
 # Display the plot
-plt.show()
+# plt.show()
