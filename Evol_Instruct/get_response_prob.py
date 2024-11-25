@@ -50,7 +50,7 @@ class EvolInstruct:
             List[Dict[str, Any]]: List of responses with the instruction, input, and output.
         """
         tokenizer = AutoTokenizer.from_pretrained(self.model_name_or_path)
-        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens, top_p=0.95)
+        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens, logprobs=1)
 
         # Prepare instructions for chat generation format
         evol_inputs = [[{"role": "user", "content": inst}] for inst in instructions]
@@ -58,14 +58,10 @@ class EvolInstruct:
 
         evol_outputs = self.llm_engine.generate(evol_inputs, sampling_params)
 
-        results = [
-            {
-                "instruction": evol_outputs[i].outputs[0].text.strip(),
-                "input": inputs[i],
-                "output": ""
-            }
-            for i in range(len(instructions))
-        ]
+        results = []
+        for i in range(len(evol_outputs)):
+            for j in range(len(evol_outputs[i].outputs[0].logprobs)):
+                results.append(evol_outputs[i].outputs[0].logprobs[j].popitem()[1].logprob)
 
         return results
 
@@ -145,7 +141,8 @@ def main(model_name_or_path: str, source_file: str,
     # Write results to the target file
     try:
         with open(target_file, "w", encoding='utf-8') as f:
-            json.dump(all_results, f, indent=4, ensure_ascii=False)
+            for item in all_results:
+                f.write(str(item) + "\n")
         logger.info(f"Results successfully saved to {target_file}")
     except Exception as e:
         logger.error(f"Error saving results to {target_file}: {e}")
@@ -158,12 +155,12 @@ if __name__ == "__main__":
     parser.add_argument('--model_name_or_path', type=str, required=True, help='Path to the model')
     parser.add_argument('--source_file', type=str, required=True, help='Path to the source JSON file')
     parser.add_argument('--target_file', type=str, required=True, help='Path to the target JSON file')
-    parser.add_argument('--round_num', type=int, required=True, help='Evolution round number')
-    parser.add_argument('--temperature', type=float, default=0.7, help='Sampling temperature')
+    parser.add_argument('--round_num', type=int, default=0, help='Evolution round number')
+    parser.add_argument('--temperature', type=float, default=0.0, help='Sampling temperature')
     parser.add_argument('--max_tokens', type=int, default=2048, help='Maximum tokens for generation')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-    parser.add_argument('--use_breadth', action='store_true', help='Whether to use breadth-based evolution')
-    parser.add_argument('--tp', type=int, default=8, help='Number of tensor parallel workers')
+    parser.add_argument('--use_breadth', type=bool, default=True, help='Whether to use breadth-based evolution')
+    parser.add_argument('--tp', type=int, default=1, help='Number of tensor parallel workers')
 
     args = parser.parse_args()
 

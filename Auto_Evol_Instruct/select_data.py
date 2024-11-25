@@ -39,10 +39,10 @@ def main(file_path1, file_path2, output_path1, output_path2):
 # 匿名函数，用于执行主函数
 if __name__ == "__main__":
     # 这里需要替换为你的文件路径和输出路径
-    file_path1 = '../LLaMA-Factory/data/gsm8k-auto-small.json'
-    file_path2 = '../LLaMA-Factory/data/gsm8k-auto-large.json'
-    output_path1 = '../LLaMA-Factory/data/gsm8k-auto-small-sample.json'
-    output_path2 = '../LLaMA-Factory/data/gsm8k-auto-large-sample.json'
+    file_path1 = '../LLaMA-Factory/data/alpaca-auto-small.json'
+    file_path2 = '../LLaMA-Factory/data/alpaca-auto-large.json'
+    output_path1 = '../LLaMA-Factory/data/alpaca-auto-small-sample.json'
+    output_path2 = '../LLaMA-Factory/data/alpaca-auto-large-sample.json'
     
     # 调用主函数
     main(file_path1, file_path2, output_path1, output_path2)
