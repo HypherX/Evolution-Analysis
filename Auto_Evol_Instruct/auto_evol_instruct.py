@@ -60,8 +60,8 @@ class EvolInstruct:
         
         final_insts = []
         # process the output
-        # import pdb
-        # pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         for output in evol_outputs:
             processed_output = output.outputs[0].text.strip()
             final_inst = processed_output.split("#Finally Rewritten Instruction#:\n", 1)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     parser.add_argument('--temperature', type=float, default=0.7, help='Sampling temperature')
     parser.add_argument('--max_tokens', type=int, default=2048, help='Maximum tokens for generation')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-    parser.add_argument('--tp', type=int, default=8, help='Number of tensor parallel workers')
+    parser.add_argument('--tp', type=int, default=1, help='Number of tensor parallel workers')
 
     args = parser.parse_args()
 

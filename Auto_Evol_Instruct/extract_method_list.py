@@ -1,10 +1,10 @@
 import json
 import logging
+import re
 from typing import List, Dict, Any
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
-from depth import create_reasoning_prompt, create_deepen_prompt, create_concretizing_prompt, create_constraints_prompt
-from breadth import create_breadth_prompt
+from auto_prompt import create_auto_prompt
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -50,24 +50,27 @@ class EvolInstruct:
             List[Dict[str, Any]]: List of responses with the instruction, input, and output.
         """
         tokenizer = AutoTokenizer.from_pretrained(self.model_name_or_path)
-        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens, logprobs=1)
+        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens, top_p=0.95)
 
         # Prepare instructions for chat generation format
         evol_inputs = [[{"role": "user", "content": inst}] for inst in instructions]
         evol_inputs = [tokenizer.apply_chat_template(inst, tokenize=False, add_generation_prompt=True) for inst in evol_inputs]
 
         evol_outputs = self.llm_engine.generate(evol_inputs, sampling_params)
+        
+        final_insts = []
+        # process the output
+        for output in evol_outputs:
+            processed_output = output.outputs[0].text.strip()
+            final_method_list = processed_output.split("Step 2 #Plan#", 1)
+            if len(final_method_list) > 1:
+                final_insts.append(final_method_list[0].strip())
+            else:
+                final_insts.append("")
 
-        results = []
-        for i in range(len(evol_outputs)):
-            for j in range(min(len(evol_outputs[i].outputs[0].logprobs), 5)):
-                results.append({
-                    list(evol_outputs[i].outputs[0].logprobs[j].values())[0].decoded_token: list(evol_outputs[i].outputs[0].logprobs[j].values())[0].logprob
-                    })
+        return final_insts
 
-        return results
-
-def get_evol_instructions(source_file: str, round_num: int, use_breadth: bool) -> List[str]:
+def get_evol_instructions(source_file: str) -> List[str]:
     """
     Extract instructions from the source file and construct new instructions based on the round number.
 
@@ -89,25 +92,12 @@ def get_evol_instructions(source_file: str, round_num: int, use_breadth: bool) -
         logger.error(f"Error decoding JSON from the file: {source_file}")
         raise
 
-    # Define the prompts order based on whether breadth-based evolution is used
-    prompt_order = [
-        create_constraints_prompt,
-        create_deepen_prompt,
-        create_concretizing_prompt,
-        create_reasoning_prompt,
-    ]
-    if use_breadth:
-        prompt_order.append(create_breadth_prompt)
-
-    # Adjust prompt order based on the evolutionary round number
-    adjusted_prompts = prompt_order[round_num % len(prompt_order):] + prompt_order[:round_num % len(prompt_order)]
-
     # Generate evolutionary instructions by applying each prompt to the given instructions
     evol_inst = [
-        adjusted_prompts[i % len(adjusted_prompts)](item["instruction"])
-        for i, item in enumerate(source_data)
+        create_auto_prompt(item["instruction"])
+        for item in source_data
     ]
-    logger.debug(f"Generated instructions for round {round_num}: {evol_inst[:5]}...")  # Debug output for first few instructions
+    logger.debug(f"Generated instructions...")  # Debug output for first few instructions
 
     # Extract inputs from the source data
     inputs = [item["input"] for item in source_data]
@@ -115,9 +105,8 @@ def get_evol_instructions(source_file: str, round_num: int, use_breadth: bool) -
     return evol_inst, inputs
 
 def main(model_name_or_path: str, source_file: str,
-         target_file: str, round_num: int,
-         temperature: float, max_tokens: int,
-         debug: bool, use_breadth: bool, tp: int) -> None:
+         target_file: str, temperature: float,
+         max_tokens: int, debug: bool, tp: int) -> None:
     """
     Main function to generate evolutionary instructions and store the results in the target file.
 
@@ -132,7 +121,7 @@ def main(model_name_or_path: str, source_file: str,
         use_breadth (bool): Whether to use breadth-based evolution.
         tp (int): Number of tensor parallel workers.
     """
-    instructions, inputs = get_evol_instructions(source_file, round_num, use_breadth)
+    instructions, inputs = get_evol_instructions(source_file)
 
     if debug:
         instructions = instructions[:100]  # Limit to the first 100 instructions for debugging
@@ -143,7 +132,8 @@ def main(model_name_or_path: str, source_file: str,
     # Write results to the target file
     try:
         with open(target_file, "w", encoding='utf-8') as f:
-            json.dump(all_results, f, indent=4, ensure_ascii=False)
+            for result in all_results:
+                f.write(str(result) + "\n")
         logger.info(f"Results successfully saved to {target_file}")
     except Exception as e:
         logger.error(f"Error saving results to {target_file}: {e}")
@@ -156,13 +146,11 @@ if __name__ == "__main__":
     parser.add_argument('--model_name_or_path', type=str, required=True, help='Path to the model')
     parser.add_argument('--source_file', type=str, required=True, help='Path to the source JSON file')
     parser.add_argument('--target_file', type=str, required=True, help='Path to the target JSON file')
-    parser.add_argument('--round_num', type=int, default=0, help='Evolution round number')
-    parser.add_argument('--temperature', type=float, default=0., help='Sampling temperature')
+    parser.add_argument('--temperature', type=float, default=0.7, help='Sampling temperature')
     parser.add_argument('--max_tokens', type=int, default=2048, help='Maximum tokens for generation')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-    parser.add_argument('--use_breadth', type=bool, default=True, help='Whether to use breadth-based evolution')
-    parser.add_argument('--tp', type=int, default=8, help='Number of tensor parallel workers')
+    parser.add_argument('--tp', type=int, default=1, help='Number of tensor parallel workers')
 
     args = parser.parse_args()
 
-    main(args.model_name_or_path, args.source_file, args.target_file, args.round_num, args.temperature, args.max_tokens, args.debug, args.use_breadth, args.tp)
+    main(args.model_name_or_path, args.source_file, args.target_file, args.temperature, args.max_tokens, args.debug, args.tp)

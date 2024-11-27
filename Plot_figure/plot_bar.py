@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+color = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
 # Helper function to normalize counts and plot data
 def normalize_counts(counts, total):
     return [(count / total) * 100 for count in counts]
@@ -24,8 +26,8 @@ def plot_single(ax, categories, slms_counts, llms_counts, ylabel):
     width = 0.35  # Bar width
 
     # Plot the SLMs and LLMs as side-by-side bars
-    ax.bar(x - width/2, slms_counts, width, label='SLMs', color='red')
-    ax.bar(x + width/2, llms_counts, width, label='LLMs', color='blue')
+    ax.bar(x - width/2, slms_counts, width, label='SLMs', color=color[0])
+    ax.bar(x + width/2, llms_counts, width, label='LLMs', color=color[1])
 
     # Set x-axis labels and positions
     ax.set_xticks(x)
@@ -45,20 +47,20 @@ categories = ['Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard']
 
 # Data for different iterations (example data)
 datasets = [
-    # Alpaca Iter 1
-    {"slms_counts": [42, 2201, 5177, 47, 6], "llms_counts": [21, 3933, 3517, 1, 0], "total": 7473, "label": 'Alpaca Iter1'},
-    {"slms_counts": [132, 2593, 14642, 2429, 226], "llms_counts": [239, 6652, 12384, 723, 24], "total": 20022, "label": 'GSM8K Iter1'},
-    {"slms_counts": [922, 3856, 30885, 12879, 3441], "llms_counts": [1055, 12782, 32988, 4740, 418], "total": 51983, "label": 'HumanEval Iter1'},
+    # Iter 1
+    {"slms_counts": [922, 3856, 30885, 12879, 3441], "llms_counts": [1055, 12782, 32988, 4740, 418], "total": 51983, "label": 'Alpaca Iter1'},
+    {"slms_counts": [42, 2201, 5177, 47, 6], "llms_counts": [21, 3933, 3517, 1, 0], "total": 7473, "label": 'GSM8K Iter1'},
+    {"slms_counts": [132, 2593, 14642, 2429, 226], "llms_counts": [239, 6652, 12384, 723, 24], "total": 20022, "label": 'HumanEval Iter1'},
     
-    # Alpaca Iter 2
-    {"slms_counts": [10, 584, 6018, 778, 83], "llms_counts": [7, 2526, 4926, 14, 0], "total": 7473, "label": 'Alpaca Iter2'},
-    {"slms_counts": [25, 385, 10429, 7312, 1871], "llms_counts": [20, 2050, 14554, 3214, 184], "total": 20022, "label": 'GSM8K Iter2'},
-    {"slms_counts": [300, 774, 13308, 19032, 18569], "llms_counts": [193, 4098, 29721, 14274, 3697], "total": 51983, "label": 'HumanEval Iter2'},
+    # Iter 2
+    {"slms_counts": [300, 774, 13308, 19032, 18569], "llms_counts": [193, 4098, 29721, 14274, 3697], "total": 51983, "label": 'Alpaca Iter2'},
+    {"slms_counts": [10, 584, 6018, 778, 83], "llms_counts": [7, 2526, 4926, 14, 0], "total": 7473, "label": 'GSM8K Iter2'},
+    {"slms_counts": [25, 385, 10429, 7312, 1871], "llms_counts": [20, 2050, 14554, 3214, 184], "total": 20022, "label": 'HumanEval Iter2'},
     
-    # Alpaca Iter 3
-    {"slms_counts": [42, 2201, 5177, 47, 6], "llms_counts": [21, 3933, 3517, 1, 0], "total": 7473, "label": 'Alpaca Iter3'},
-    {"slms_counts": [7, 61, 5165, 9098, 5691], "llms_counts": [2, 582, 11703, 6753, 982], "total": 20022, "label": 'GSM8K Iter3'},
-    {"slms_counts": [77, 125, 4865, 12190, 34726], "llms_counts": [66, 1294, 19458, 19658, 11507], "total": 51983, "label": 'HumanEval Iter3'}
+    # Iter 3
+    {"slms_counts": [77, 125, 4865, 12190, 34726], "llms_counts": [66, 1294, 19458, 19658, 11507], "total": 51983, "label": 'Alpaca Iter3'},
+    {"slms_counts": [11, 192, 4819, 1906, 545], "llms_counts": [0, 1475, 5949, 49, 0], "total": 7473, "label": 'GSM8K Iter3'},
+    {"slms_counts": [7, 61, 5165, 9098, 5691], "llms_counts": [2, 582, 11703, 6753, 982], "total": 20022, "label": 'HumanEval Iter3'}
 ]
 
 # Create the subplots (3 rows, 3 columns)
@@ -80,5 +82,3 @@ plt.tight_layout()
 # Save the figure
 plt.savefig(f'figs/difficulty.pdf')
 
-# Show the plot
-plt.show()

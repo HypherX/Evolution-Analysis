@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+color = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
 def plot_single(ax, x, model1, Ours, group_labels, y_ticks, ylim, ylabel):
     """
     Plot a single line graph comparing two models.
@@ -19,8 +21,8 @@ def plot_single(ax, x, model1, Ours, group_labels, y_ticks, ylim, ylabel):
     ax.grid(linestyle="-.")
     
     # Plot both models with distinct markers and colors
-    ax.plot(x, model1, marker='s', markersize=5, color="blue", label="LLMs", linewidth=2.0)
-    ax.plot(x, Ours, marker='X', markersize=5, color="red", label="SLMs", linewidth=2.0)
+    ax.plot(x, model1, marker='s', markersize=5, color=color[1], label="LLMs", linewidth=2.0)
+    ax.plot(x, Ours, marker='X', markersize=5, color=color[0], label="SLMs", linewidth=2.0)
 
     # Set x-axis labels and ticks
     ax.set_xticks(x)

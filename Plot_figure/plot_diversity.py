@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 from scipy import stats
+color = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
 # Load the min_neighbor_distance values from a JSONL file
 def load_min_neighbor_distance(file_path):
@@ -39,9 +40,9 @@ def plot_hist_with_trendline(ax, distances, label, color):
     ax.plot(x, kde(x), color=color, linestyle='--', linewidth=2)
 
     # Set axis labels and legend
-    ax.set_xlabel('Min Neighbor Distance', fontsize=12)
-    ax.set_ylabel('Proportion', fontsize=12)
-    ax.legend(loc='upper right', fontsize=10)
+    ax.set_xlabel('Min Neighbor Distance', fontsize=16)
+    ax.set_ylabel('Frequency Density', fontsize=16)
+    ax.legend(loc='upper right', fontsize=14)
 
 # Load data from JSONL files
 file1 = 'results/autoif-small_distance.jsonl'
@@ -51,13 +52,12 @@ distances2 = load_min_neighbor_distance(file2)
 
 # Create the figure and axis for plotting
 fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size for better clarity
+ax.grid(linestyle="-.")
 
 # Plot the data
-plot_hist_with_trendline(ax, distances1, 'SLMs', 'red')
-plot_hist_with_trendline(ax, distances2, 'LLMs', 'blue')
+plot_hist_with_trendline(ax, distances1, 'SLMs', color[0])
+plot_hist_with_trendline(ax, distances2, 'LLMs', color[1])
 
-# Title and layout adjustments
-ax.set_title('Min Neighbor Distance Distribution', fontsize=14)
 plt.tight_layout()
 
 # Save the plot as a PDF
