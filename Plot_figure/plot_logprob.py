@@ -36,7 +36,7 @@ ax.grid(linestyle="-.")
 kde1 = gaussian_kde(probs1)
 kde2 = gaussian_kde(probs2)
 
-x = np.linspace(0, 1, 1000)  # 从0到1的概率范围
+x = np.linspace(0, 0.99, 1000)  # 从0到1的概率范围
 ax.plot(x, kde1(x), label='LLMs', color=color[1])
 ax.plot(x, kde2(x), label='SLMs', color=color[0])
 

@@ -50,7 +50,7 @@ class EvolInstruct:
             List[Dict[str, Any]]: List of responses with the instruction, input, and output.
         """
         tokenizer = AutoTokenizer.from_pretrained(self.model_name_or_path)
-        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens, top_p=0.95)
+        sampling_params = SamplingParams(temperature=temperature, max_tokens=max_tokens)
 
         # Prepare instructions for chat generation format
         evol_inputs = [[{"role": "user", "content": inst}] for inst in instructions]
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     parser.add_argument('--source_file', type=str, required=True, help='Path to the source JSON file')
     parser.add_argument('--target_file', type=str, required=True, help='Path to the target JSON file')
     parser.add_argument('--round_num', type=int, required=True, help='Evolution round number')
-    parser.add_argument('--temperature', type=float, default=0.7, help='Sampling temperature')
+    parser.add_argument('--temperature', type=float, default=0.0, help='Sampling temperature')
     parser.add_argument('--max_tokens', type=int, default=2048, help='Maximum tokens for generation')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     parser.add_argument('--use_breadth', action='store_true', help='Whether to use breadth-based evolution')
