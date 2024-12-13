@@ -4,7 +4,7 @@ from tqdm import tqdm
 import json
 
 # 初始化Llama模型和tokenizer
-model_name = '/share/project/huitingfeng/model_zoo/Llama-3.2-3B'  # 替换为你使用的模型
+model_name = '<model_name_or_path>'  # 替换为你使用的模型
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token  # 设置pad_token为eos_token
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16, attn_implementation="flash_attention_2").cuda()

@@ -33,6 +33,7 @@ for i in range(len(x_positions)):
 
 ax1.set_yticks(x_positions)
 ax1.set_yticklabels(configs, fontsize=14)
+ax1.set_title("IC-IFD vs. IFD on Llama-3-8B", fontsize=14)
 ax1.set_xticklabels(['0', '100', '200', '300', '400', '500', '600', '700', '800'], fontsize=14)
 
 # 在第一个子图中添加legend，并调整位置
@@ -57,6 +58,7 @@ for i in range(len(x_positions)):
 
 ax2.set_yticks(x_positions)
 ax2.set_yticklabels(configs, fontsize=14)
+ax2.set_title("IC-IFD vs. IFD on Llama-3.2-3B", fontsize=14)
 ax2.set_xticklabels(['0', '100', '200', '300', '400', '500', '600', '700', '800'], fontsize=14)
 
 # 在第二个子图中添加legend，并调整位置

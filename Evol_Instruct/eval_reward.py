@@ -226,7 +226,7 @@ def main(config):
 
 # 配置参数（可以通过命令行或配置文件传递）
 config = Config(
-    model_path="/share/project/huitingfeng/model_zoo/internlm-reward-7b",
+    model_path="<model_name_or_path>",
     data_path="../LLaMA-Factory/data/gsm8k-iter1-small.json",  # 只处理一个数据集
     prompt_order=[
         create_constraints_prompt,

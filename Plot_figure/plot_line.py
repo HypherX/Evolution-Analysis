@@ -38,7 +38,7 @@ def plot_single(ax, x, model1, Ours, group_labels, y_min, y_max, ylabel):
     ax.set_ylabel(ylabel, fontsize=16)
     
     # Display legend
-    ax.legend(loc='upper left', numpoints=1, ncol=2, fontsize=16)
+    ax.legend(loc='upper left', numpoints=1, ncol=1, fontsize=16)
 
 # X-axis values (iterations)
 x = np.array([1, 2, 3, 4])
@@ -62,12 +62,12 @@ fig, axes = plt.subplots(2, 4, figsize=(18, 6))
 # ]
 
 plot_data = [
-    {"model1": [23.11, 31.61, 29.94, 35.12], "Ours": [23.11, 38.63, 43.99, 33.09], "ylabel": "Pr.(S)"},
-    {"model1": [32.97, 43.29, 41.85, 47.36], "Ours": [32.97, 48.56, 53.36, 44.72], "ylabel": "In.(S)"},
-    {"model1": [24.77, 34.38, 32.72, 36.97], "Ours": [24.77, 43.33, 46.58, 36.41], "ylabel": "Pr.(L)"},
-    {"model1": [35.13, 46.16, 45.20, 49.28], "Ours": [35.13, 51.92, 56.00, 48.32], "ylabel": "In.(L)"},
-    {"model1": [53.68, 63.23, 67.17, 65.50], "Ours": [53.68, 63.91, 68.46, 67.85], "ylabel": "GSM8K"},
-    {"model1": [0.22, 9.22, 11.70, 10.30], "Ours": [0.22, 11.48, 12.80, 13.42], "ylabel": "MATH"},
+    {"model1": [23.11, 33.83, 32.53, 35.12], "Ours": [23.11, 35.49, 36.78, 33.09], "ylabel": "Pr.(S)"},
+    {"model1": [32.97, 46.28, 43.76, 47.36], "Ours": [32.97, 47.00, 48.20, 44.72], "ylabel": "In.(S)"},
+    {"model1": [24.77, 36.41, 34.20, 36.97], "Ours": [24.77, 39.56, 40.30, 36.41], "ylabel": "Pr.(L)"},
+    {"model1": [35.13, 49.28, 46.16, 49.28], "Ours": [35.13, 50.72, 50.84, 48.32], "ylabel": "In.(L)"},
+    {"model1": [53.68, 63.00, 64.75, 65.88], "Ours": [53.68, 63.38, 64.82, 64.59], "ylabel": "GSM8K"},
+    {"model1": [0.22, 7.62, 10.04, 11.82], "Ours": [0.22, 11.44, 11.48, 14.12], "ylabel": "MATH"},
     {"model1": [25.00, 45.73, 49.39, 47.56], "Ours": [25.00, 48.17, 50.00, 43.29], "ylabel": "HumanEval"},
     {"model1": [28.60, 37.80, 40.60, 40.80], "Ours": [28.60, 39.40, 40.40, 40.60], "ylabel": "MBPP"}
 ]
